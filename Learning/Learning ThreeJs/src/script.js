@@ -4,7 +4,7 @@
     import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-    let renderer, scene, camera, controls, previousRAF
+    let renderer, scene, camera, orbControls, previousRAF, controls
     let mixers = []
 
     const main = () => {
@@ -12,7 +12,8 @@
         initializeGround()
         initializeOrbitControls()
         //loadStaticModel('./models/car/car.gltf', 15)
-        loadAnimatedModel('./models/xbot/', 'xbot.fbx', 0.5, 'dancing.fbx')
+        loadAnimatedModel('./models/xbot/', 'xbot.fbx', 0.1, 'walking.fbx')
+        loadAnimatedModelWithControls()
         RAF() //request animation frame --updates
     }
 
@@ -73,19 +74,20 @@
             './background/posz.bmp',
             './background/negz.bmp'
         ])
+        texture.encoding = THREE.sRGBEncoding;
         scene.background = texture
     }
 
     const initializeOrbitControls = () => {
-        controls = new OrbitControls(camera, renderer.domElement)
-        controls.target.set(0, 20, 0)
-        controls.update()
+        orbControls = new OrbitControls(camera, renderer.domElement)
+        orbControls.target.set(0, 20, 0)
+        orbControls.update()
     }
 
     const initializeGround = () => {
         const ground = new THREE.Mesh(
             new THREE.BoxBufferGeometry(100, 100, 1),
-            new THREE.MeshStandardMaterial()
+            new THREE.MeshStandardMaterial({ color: 121111 })
         )
         ground.castShadow = false
         ground.receiveShadow = true
@@ -123,7 +125,7 @@
                 }
             })
             fbx.scale.setScalar(scale);
-            fbx.position.y = 4 
+            fbx.position.y = 1
 
             //loading the animation
             fbxLoader.load(animation, anim => {
@@ -134,6 +136,109 @@
             })
             scene.add(fbx)
         })
+
+    }
+
+    const loadAnimatedModelWithControls = () => {
+        const params = {
+            camera: camera,
+            scene: scene
+        }
+        controls = initializeCharacterController(
+            params,
+            './models/xbot/',
+            'xbot.fbx',
+            ['dancing.fbx', 'running.fbx', 'walking.fbx']
+        )
+    }
+
+    const initializeCharacterController = (params, modelPath, model, animationsNames) => {
+
+        let decceleration, acceleration, velocity, animations, input, stateMachine, target, mixer, manager
+
+        decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0)
+        acceleration = new THREE.Vector3(1, 0.25, 50.0)
+        velocity = new THREE.Vector3(0, 0, 0)
+
+        animations = {}
+        input = basicCharacterControllerInput()
+        stateMachine = BasicCharacterControllerProxy(animations)
+
+        //loading models
+        const loader = new FBXLoader()
+        loader.setPath(modelPath)
+        loader.load(model, fbx => {
+            fbx.scale.setScalar(0.1);
+            fbx.traverse(c => {
+                c.castShadow = true
+                c.receiveShadow = true
+                if (c.isMesh) {
+                    if (c.material.map) c.material.map.anisotropy = 16
+                }
+            })
+
+            target = fbx
+            params.scene.add(target)
+
+            mixer = new THREE.AnimationMixer(target)
+
+            manager = new THREE.LoadingManager()
+            manager.onLoad = () => {
+                stateMachine.SetState('idle')
+            }
+
+            const onLoad = (animationName, anim) => {
+                const clip = anim.animations[0]
+                const action = mixer.clipAction(clip)
+          
+                animations[animationName] = {
+                    clip: clip,
+                    action: action,
+                }
+            }
+
+            const loader = new FBXLoader(manager);
+            loader.setPath(modelPath)
+            animationsNames.forEach(animationName => {
+                loader.load(animationName, anim => onLoad(animationName, anim))
+            })
+
+        })
+        
+    }
+
+    const basicCharacterControllerInput = () => {
+        let keys
+
+        keys = {
+            forward: false,
+            backward: false,
+            left: false,
+            right: false,
+            space: false,
+            shift: false
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.code === 'KeyW') keys.forward = true
+            if (event.code === 'KeyA') keys.left = true
+            if (event.code === 'KeyD') keys.right = true
+            if (event.code === 'KeyS') keys.backward = true
+            if (event.code === 'Space') keys.space = true
+            if (event.code === 'ShiftLeft') keys.shift = true
+        }, false)
+
+        document.addEventListener('keyup', event => {
+            if (event.code === 'KeyW') keys.forward = false
+            if (event.code === 'KeyA') keys.left = false
+            if (event.code === 'KeyD') keys.right = false
+            if (event.code === 'KeyS') keys.backward = false
+            if (event.code === 'Space') keys.space = false
+            if (event.code === 'ShiftLeft') keys.shift = false
+        }, false)
+    }
+
+    const BasicCharacterControllerProxy = () => {
 
     }
 
