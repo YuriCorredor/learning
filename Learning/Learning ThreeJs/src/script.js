@@ -160,8 +160,6 @@ const loadAnimatedModelWithControls = () => {
     controls = new BasicCharacterController(params)
 }
 
-
-
 const RAF = () => {
     requestAnimationFrame(t => {
         if (previousRAF === null) {
