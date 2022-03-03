@@ -6,19 +6,63 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import BasicCharacterController from './controls'
 import ThirdPersonCamera from './camera'
 
-let renderer, scene, camera, orbControls, previousRAF, controls, thirdPersonCamera
+let renderer, scene, camera, orbControls, controls, thirdPersonCamera, physicsWorld, tmpTransform
+let previousRAF = null
 let mixers = []
+let rigidBodies = []
+
+class RigidBody {
+
+    constructor() {}
+
+    setRestitution(val) {
+        this.body_.setRestitution(val);
+    }
+  
+    setFriction(val) {
+        this.body_.setFriction(val);
+    }
+  
+    setRollingFriction(val) {
+        this.body_.setRollingFriction(val);
+    }
+  
+    createBox(mass, pos, quat, size) {
+        this.transform_ = new Ammo.btTransform()
+        this.transform_.setIdentity()
+        this.transform_.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z))
+        this.transform_.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w))
+        this.motionState_ = new Ammo.btDefaultMotionState(this.transform_)
+    
+        const btSize = new Ammo.btVector3(size.x * 0.5, size.y * 0.5, size.z * 0.5)
+        this.shape_ = new Ammo.btBoxShape(btSize)
+        this.shape_.setMargin(0.05)
+    
+        this.inertia_ = new Ammo.btVector3(0, 0, 0)
+        if (mass > 0) {
+            this.shape_.calculateLocalInertia(mass, this.inertia_)
+        }
+    
+        this.info_ = new Ammo.btRigidBodyConstructionInfo(mass, this.motionState_, this.shape_, this.inertia_)
+        this.body_ = new Ammo.btRigidBody(this.info_)
+    
+        Ammo.destroy(btSize)
+    }
+}
 
 const main = () => {
     Ammo().then(lib => {
         Ammo = lib
+        initializePhysics()
         initializeWorld()
-        initializeGround()
-        //initializeOrbitControls()
+        //initializeGround()
+        initializeGroundWithPhysics()
+        initializeBoxWithPhysics()
+        initializeOrbitControls()
         //loadStaticModel('./models/car/car.gltf', 15)
         //loadAnimatedModel('./models/xbot/', 'xbot.fbx', 0.1, 'walking.fbx')
         //loadAnimatedModelWithControls()
-        loadAnimatedModelWithControlsAndThirdPersonCamera()
+        //loadAnimatedModelWithControlsAndThirdPersonCamera()
         RAF() //request animation frame --updates
     })
 }
@@ -49,7 +93,7 @@ const initializeWorld = () => {
     scene = new THREE.Scene()
 
     //adding lighting to the scene
-    const ambientLight = new THREE.AmbientLight(0x101010, 0.5)
+    const ambientLight = new THREE.AmbientLight(0x101010, 0.8)
     scene.add(ambientLight)
 
     const hemisphereLight = new THREE.HemisphereLight(0x101010, 0x444444, 1.5)
@@ -96,9 +140,49 @@ const initializeWorld = () => {
     scene.background = texture
 }
 
+const initializePhysics = () => {
+    const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration()
+    const dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration)
+    const broadphase = new Ammo.btDbvtBroadphase()
+    const solver = new Ammo.btSequentialImpulseConstraintSolver()
+    physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
+    physicsWorld.setGravity(new Ammo.btVector3(0, -100, 0))
+
+    tmpTransform = new Ammo.btTransform()
+}
+
+const initializeGroundWithPhysics = () => {
+    const ground = new THREE.Mesh(new THREE.BoxGeometry(100, 1, 100), new THREE.MeshStandardMaterial({color: 0x404040}))
+    ground.castShadow = false
+    ground.receiveShadow = true
+    scene.add(ground)
+
+    const rbGround = new RigidBody()
+    rbGround.createBox(0, ground.position, ground.quaternion, new THREE.Vector3(100, 1, 100))
+    rbGround.setRestitution(0.99)
+    physicsWorld.addRigidBody(rbGround.body_)
+}
+
+const initializeBoxWithPhysics = () => {
+    const box = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), new THREE.MeshStandardMaterial({color: 0x808080}))
+    box.position.set(0, 40, 0)
+    box.castShadow = true
+    box.receiveShadow = true
+    scene.add(box)
+
+    const rbBox = new RigidBody()
+    rbBox.createBox(1, box.position, box.quaternion, new THREE.Vector3(4, 4, 4))
+    rbBox.setRestitution(0.25)
+    rbBox.setFriction(1)
+    rbBox.setRollingFriction(5)
+    physicsWorld.addRigidBody(rbBox.body_)
+
+    rigidBodies.push({ mesh: box, rigidBody: rbBox })
+}
+
 const initializeOrbitControls = () => {
     orbControls = new OrbitControls(camera, renderer.domElement)
-    orbControls.target.set(0, 20, 0)
+    orbControls.target.set(0, 0, 0)
     orbControls.update()
 }
 
@@ -184,11 +268,10 @@ const RAF = () => {
             previousRAF = t
         }
 
-        renderer.render(scene, camera)
         step(t - previousRAF)
-        previousRAF = t
-
+        renderer.render(scene, camera)
         RAF()
+        previousRAF = t
     })
 
     const step = timeElapsed => {
@@ -199,7 +282,19 @@ const RAF = () => {
     
         if (controls) controls.Update(timeElapsedSeconds)
 
-        thirdPersonCamera.Update(timeElapsedSeconds)
+        if (thirdPersonCamera) thirdPersonCamera.Update(timeElapsedSeconds)
+
+        if (physicsWorld) physicsWorld.stepSimulation(timeElapsedSeconds, 10)
+
+        for (let i = 0; i < rigidBodies.length; i++) {
+            rigidBodies[i].rigidBody.motionState_.getWorldTransform(tmpTransform)
+            const pos = tmpTransform.getOrigin()
+            const quat = tmpTransform.getRotation()
+            const pos3 = new THREE.Vector3(pos.x(), pos.y(), pos.z())
+            const quat3 = new THREE.Quaternion(quat.x(), quat.y(), quat.z(), quat.w())
+            rigidBodies[i].mesh.position.copy(pos3)
+            rigidBodies[i].mesh.quaternion.copy(quat3)
+        }
 
     }
 }

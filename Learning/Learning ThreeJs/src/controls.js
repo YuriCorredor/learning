@@ -28,6 +28,7 @@ export default class BasicCharacterController {
         loader.setPath('./models/xbot/')
         loader.load('xbot.fbx', (fbx) => {
             fbx.scale.setScalar(0.1)
+            fbx.position.set(0, 0.5, 0)
             fbx.traverse(c => {
                 c.castShadow = true
                 c.receiveShadow = true
