@@ -12,6 +12,7 @@ export default class BasicCharacterController {
         this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0)
         this._acceleration = new THREE.Vector3(1.5, 0.5, 85.0)
         this._velocity = new THREE.Vector3(0, 0, 0)
+        this._position = new THREE.Vector3();
 
         this._animations = {}
         this._input = new BasicCharacterControllerInput()
@@ -59,6 +60,17 @@ export default class BasicCharacterController {
             loader.load('dance.fbx', (a) => _OnLoad('dance', a))
             loader.load('walk-backwards.fbx', (a) => _OnLoad('walk-backwards', a))
         })
+    }
+
+    get Position() {
+        return this._position;
+    }
+    
+    get Rotation() {
+        if (!this._target) {
+            return new THREE.Quaternion();
+        }
+        return this._target.quaternion;
     }
 
     Update(timeInSeconds) {
@@ -149,6 +161,8 @@ export default class BasicCharacterController {
         controlObject.position.add(sideways)
     
         oldPosition.copy(controlObject.position)
+
+        this._position.copy(controlObject.position);
     
         if (this._mixer) {
             this._mixer.update(timeInSeconds)

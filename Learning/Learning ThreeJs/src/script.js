@@ -4,17 +4,19 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import BasicCharacterController from './controls'
+import ThirdPersonCamera from './camera'
 
-let renderer, scene, camera, orbControls, previousRAF, controls
+let renderer, scene, camera, orbControls, previousRAF, controls, thirdPersonCamera
 let mixers = []
 
 const main = () => {
     initializeWorld()
     initializeGround()
-    initializeOrbitControls()
+    //initializeOrbitControls()
     //loadStaticModel('./models/car/car.gltf', 15)
     //loadAnimatedModel('./models/xbot/', 'xbot.fbx', 0.1, 'walking.fbx')
-    loadAnimatedModelWithControls()
+    //loadAnimatedModelWithControls()
+    loadAnimatedModelWithControlsAndThirdPersonCamera()
     RAF() //request animation frame --updates
 }
 
@@ -33,7 +35,7 @@ const initializeWorld = () => {
     const near = 1.0
     const far = 1000.0
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-    camera.position.set(0, 20, 85)
+    camera.position.set(25, 100, 25)
 
     //adding eventListner on resizing to matain the aspect ratio
     window.addEventListener('resize', () => {
@@ -160,6 +162,19 @@ const loadAnimatedModelWithControls = () => {
     controls = new BasicCharacterController(params)
 }
 
+const loadAnimatedModelWithControlsAndThirdPersonCamera = () => {
+    const params = {
+        camera: camera,
+        scene: scene
+    }
+    controls = new BasicCharacterController(params)
+
+    thirdPersonCamera = new ThirdPersonCamera({
+        camera: camera,
+        target: controls
+    })
+}
+
 const RAF = () => {
     requestAnimationFrame(t => {
         if (previousRAF === null) {
@@ -174,14 +189,15 @@ const RAF = () => {
     })
 
     const step = timeElapsed => {
+
         const timeElapsedSeconds = timeElapsed / 1000
-        if (mixers) {
-            mixers.map(m => m.update(timeElapsedSeconds))
-        }
+
+        if (mixers) mixers.map(m => m.update(timeElapsedSeconds))
     
-        if (controls) {
-            controls.Update(timeElapsedSeconds)
-        }
+        if (controls) controls.Update(timeElapsedSeconds)
+
+        thirdPersonCamera.Update(timeElapsedSeconds)
+
     }
 }
 
