@@ -82,6 +82,7 @@ export default class BasicCharacterController {
         const _Q = new THREE.Quaternion()
         const _A = new THREE.Vector3()
         const _R = controlObject.quaternion.clone()
+        let velToRotate = 2.5
     
         const acc = this._acceleration.clone()
         if (this._input._keys.shift) {
@@ -92,27 +93,38 @@ export default class BasicCharacterController {
             acc.multiplyScalar(0.0)
         }
     
-        if (this._input._keys.forward) {
+        if (this._input._keys.forward && !this._input._keys.backward) {
             velocity.z += acc.z * timeInSeconds;
         }
-        if (this._input._keys.backward) {
+        if (this._input._keys.backward && !this._input._keys.forward) {
             velocity.z -= acc.z/2 * timeInSeconds;
         }
-        if (this._input._keys.left) {
+        if (this._input._keys.backward && this._input._keys.forward) {
+            this._stateMachine.SetState('idle')
+        }
+        if (this._input._keys.left && !(this._stateMachine._currentState.Name == 'idle')) {
             if (!(this._stateMachine._currentState.Name == 'dance')) {
                 if (!this._input._keys.forward) velocity.z += acc.z/2 * timeInSeconds
-                if (this._input._keys.shift) velocity.z += acc.z/2 * timeInSeconds
+                if (this._input._keys.shift && !this._input._keys.backward) velocity.z += acc.z/2 * timeInSeconds
+                if (this._input._keys.backward) {
+                    velToRotate = 0.5
+                    velocity.z -= acc.z/4 * timeInSeconds
+                }
                 _A.set(0, 1, 0)
-                _Q.setFromAxisAngle(_A, 2.5 * Math.PI * timeInSeconds * this._acceleration.y)
+                _Q.setFromAxisAngle(_A, velToRotate * Math.PI * timeInSeconds * this._acceleration.y)
                 _R.multiply(_Q)
             }
         }
-        if (this._input._keys.right) {
+        if (this._input._keys.right && !(this._stateMachine._currentState.Name == 'idle')) {
             if (!(this._stateMachine._currentState.Name == 'dance')) {
                 if (!this._input._keys.forward) velocity.z += acc.z/2 * timeInSeconds
-                if (this._input._keys.shift) velocity.z += acc.z/2 * timeInSeconds
+                if (this._input._keys.shift && !this._input._keys.backward) velocity.z += acc.z/2 * timeInSeconds
+                if (this._input._keys.backward) {
+                    velToRotate = 0.5
+                    velocity.z -= acc.z/4 * timeInSeconds
+                }
                 _A.set(0, 1, 0)
-                _Q.setFromAxisAngle(_A, 2.5 * -Math.PI * timeInSeconds * this._acceleration.y)
+                _Q.setFromAxisAngle(_A, velToRotate * -Math.PI * timeInSeconds * this._acceleration.y)
                 _R.multiply(_Q)
             }
         }
