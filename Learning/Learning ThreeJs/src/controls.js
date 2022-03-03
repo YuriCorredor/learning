@@ -63,33 +63,33 @@ export default class BasicCharacterController {
 
     Update(timeInSeconds) {
         if (!this._target || !this._stateMachine._currentState) {
-            return;
+            return
         }
-        this._stateMachine.Update(timeInSeconds, this._input);
-        const velocity = this._velocity;
+        this._stateMachine.Update(timeInSeconds, this._input)
+        const velocity = this._velocity
         const frameDecceleration = new THREE.Vector3(
             velocity.x * this._decceleration.x,
             velocity.y * this._decceleration.y,
             velocity.z * this._decceleration.z
-        );
-        frameDecceleration.multiplyScalar(timeInSeconds);
+        )
+        frameDecceleration.multiplyScalar(timeInSeconds)
         frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-            Math.abs(frameDecceleration.z), Math.abs(velocity.z));
+            Math.abs(frameDecceleration.z), Math.abs(velocity.z))
     
-        velocity.add(frameDecceleration);
+        velocity.add(frameDecceleration)
     
-        const controlObject = this._target;
-        const _Q = new THREE.Quaternion();
-        const _A = new THREE.Vector3();
-        const _R = controlObject.quaternion.clone();
+        const controlObject = this._target
+        const _Q = new THREE.Quaternion()
+        const _A = new THREE.Vector3()
+        const _R = controlObject.quaternion.clone()
     
-        const acc = this._acceleration.clone();
+        const acc = this._acceleration.clone()
         if (this._input._keys.shift) {
-            acc.multiplyScalar(2.0);
+            acc.multiplyScalar(2.0)
         }
     
         if (this._stateMachine._currentState.Name == 'dance') {
-            acc.multiplyScalar(0.0);
+            acc.multiplyScalar(0.0)
         }
     
         if (this._input._keys.forward) {
@@ -100,44 +100,46 @@ export default class BasicCharacterController {
         }
         if (this._input._keys.left) {
             if (!(this._stateMachine._currentState.Name == 'dance')) {
-                velocity.z += acc.z/6 * timeInSeconds;
-                _A.set(0, 1, 0);
-                _Q.setFromAxisAngle(_A, 2.0 * Math.PI * timeInSeconds * this._acceleration.y);
-                _R.multiply(_Q);
+                if (!this._input._keys.forward) velocity.z += acc.z/2 * timeInSeconds
+                if (this._input._keys.shift) velocity.z += acc.z/2 * timeInSeconds
+                _A.set(0, 1, 0)
+                _Q.setFromAxisAngle(_A, 2.5 * Math.PI * timeInSeconds * this._acceleration.y)
+                _R.multiply(_Q)
             }
         }
         if (this._input._keys.right) {
             if (!(this._stateMachine._currentState.Name == 'dance')) {
-                velocity.z += acc.z/6 * timeInSeconds;
-                _A.set(0, 1, 0);
-                _Q.setFromAxisAngle(_A, 2.0 * -Math.PI * timeInSeconds * this._acceleration.y);
-                _R.multiply(_Q);   
+                if (!this._input._keys.forward) velocity.z += acc.z/2 * timeInSeconds
+                if (this._input._keys.shift) velocity.z += acc.z/2 * timeInSeconds
+                _A.set(0, 1, 0)
+                _Q.setFromAxisAngle(_A, 2.5 * -Math.PI * timeInSeconds * this._acceleration.y)
+                _R.multiply(_Q)
             }
         }
     
-        controlObject.quaternion.copy(_R);
+        controlObject.quaternion.copy(_R)
     
-        const oldPosition = new THREE.Vector3();
-        oldPosition.copy(controlObject.position);
+        const oldPosition = new THREE.Vector3()
+        oldPosition.copy(controlObject.position)
     
-        const forward = new THREE.Vector3(0, 0, 1);
-        forward.applyQuaternion(controlObject.quaternion);
-        forward.normalize();
+        const forward = new THREE.Vector3(0, 0, 1)
+        forward.applyQuaternion(controlObject.quaternion)
+        forward.normalize()
     
-        const sideways = new THREE.Vector3(1, 0, 0);
-        sideways.applyQuaternion(controlObject.quaternion);
-        sideways.normalize();
+        const sideways = new THREE.Vector3(1, 0, 0)
+        sideways.applyQuaternion(controlObject.quaternion)
+        sideways.normalize()
     
-        sideways.multiplyScalar(velocity.x * timeInSeconds);
-        forward.multiplyScalar(velocity.z * timeInSeconds);
+        sideways.multiplyScalar(velocity.x * timeInSeconds)
+        forward.multiplyScalar(velocity.z * timeInSeconds)
     
-        controlObject.position.add(forward);
-        controlObject.position.add(sideways);
+        controlObject.position.add(forward)
+        controlObject.position.add(sideways)
     
-        oldPosition.copy(controlObject.position);
+        oldPosition.copy(controlObject.position)
     
         if (this._mixer) {
-            this._mixer.update(timeInSeconds);
+            this._mixer.update(timeInSeconds)
         }
     }
 }
