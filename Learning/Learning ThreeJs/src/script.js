@@ -10,14 +10,17 @@ let renderer, scene, camera, orbControls, previousRAF, controls, thirdPersonCame
 let mixers = []
 
 const main = () => {
-    initializeWorld()
-    initializeGround()
-    //initializeOrbitControls()
-    //loadStaticModel('./models/car/car.gltf', 15)
-    //loadAnimatedModel('./models/xbot/', 'xbot.fbx', 0.1, 'walking.fbx')
-    //loadAnimatedModelWithControls()
-    loadAnimatedModelWithControlsAndThirdPersonCamera()
-    RAF() //request animation frame --updates
+    Ammo().then(lib => {
+        Ammo = lib
+        initializeWorld()
+        initializeGround()
+        //initializeOrbitControls()
+        //loadStaticModel('./models/car/car.gltf', 15)
+        //loadAnimatedModel('./models/xbot/', 'xbot.fbx', 0.1, 'walking.fbx')
+        //loadAnimatedModelWithControls()
+        loadAnimatedModelWithControlsAndThirdPersonCamera()
+        RAF() //request animation frame --updates
+    })
 }
 
 const initializeWorld = () => {
