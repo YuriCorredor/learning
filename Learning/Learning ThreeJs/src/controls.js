@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { RigidBody } from './script'
 
 export default class BasicCharacterController {
     constructor(params) {
@@ -9,6 +10,9 @@ export default class BasicCharacterController {
     _Init(params) {
 
         this._params = params
+        this._physicsWorld = params.physicsWorld
+        console.log(this._physicsWorld)
+        this._rigidBodies = params.rigidBodies
         this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0)
         this._acceleration = new THREE.Vector3(1.5, 0.5, 85.0)
         this._velocity = new THREE.Vector3(0, 0, 0)
@@ -23,12 +27,20 @@ export default class BasicCharacterController {
         this._LoadModels()
     }
 
+    _GetFbxSize() {
+        //size's x, y, z are width, height, depth.
+        let box3 = new THREE.Box3().setFromObject(this._target)
+        let size = new THREE.Vector3()
+        return box3.getSize(size)
+    }
+
     _LoadModels() {
         const loader = new FBXLoader()
         loader.setPath('./models/xbot/')
         loader.load('xbot.fbx', (fbx) => {
+            fbx.name = 'xbot'
             fbx.scale.setScalar(0.1)
-            fbx.position.set(0, 0.5, 0)
+            fbx.position.set(0, 8, 0)
             fbx.traverse(c => {
                 c.castShadow = true
                 c.receiveShadow = true
@@ -37,6 +49,7 @@ export default class BasicCharacterController {
                 }
             })
             this._target = fbx
+            this._fbxSize = this._GetFbxSize()
             this._params.scene.add(this._target)
             this._mixer = new THREE.AnimationMixer(this._target)
             this._manager = new THREE.LoadingManager()
@@ -53,6 +66,16 @@ export default class BasicCharacterController {
                     action: action,
                 }
             }
+
+            const rbCylinder = new RigidBody()
+            rbCylinder.createCylinder(1, this._target.position, this._target.quaternion, 5, 1 )
+            rbCylinder.setRestitution(0.25)
+            rbCylinder.setFriction(1)
+            rbCylinder.setRollingFriction(5)
+            this._physicsWorld.addRigidBody(rbCylinder.body_)
+
+            this._rigidBodies.push({ mesh: this._target, rigidBody: rbCylinder })
+
             const loader = new FBXLoader(this._manager)
             loader.setPath('./models/xbot/')
             loader.load('walk.fbx', (a) => _OnLoad('walk', a))

@@ -11,7 +11,7 @@ let previousRAF = null
 let mixers = []
 let rigidBodies = []
 
-class RigidBody {
+export class RigidBody {
 
     constructor() {}
 
@@ -48,6 +48,28 @@ class RigidBody {
     
         Ammo.destroy(btSize)
     }
+
+    createCylinder(mass, pos, quat, radius, height) {
+        this.transform_ = new Ammo.btTransform()
+        this.transform_.setIdentity()
+        this.transform_.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z))
+        this.transform_.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w))
+        this.motionState_ = new Ammo.btDefaultMotionState(this.transform_)
+
+        const btSize = new Ammo.btVector3(radius, height * 0.5, radius)
+        this.shape_ = new Ammo.btCylinderShape(btSize)
+        this.shape_.setMargin(0.05)
+    
+        this.inertia_ = new Ammo.btVector3(0, 0, 0)
+        if (mass > 0) {
+            this.shape_.calculateLocalInertia(mass, this.inertia_)
+        }
+    
+        this.info_ = new Ammo.btRigidBodyConstructionInfo(mass, this.motionState_, this.shape_, this.inertia_)
+        this.body_ = new Ammo.btRigidBody(this.info_)
+    
+        Ammo.destroy(btSize)
+    }
 }
 
 const main = () => {
@@ -57,12 +79,14 @@ const main = () => {
         initializeWorld()
         //initializeGround()
         initializeGroundWithPhysics()
-        initializeBoxWithPhysics()
-        initializeOrbitControls()
+        //initializeBoxWithPhysics()
+        initializeCylinderWithPhysics()
+        //initializeOrbitControls()
         //loadStaticModel('./models/car/car.gltf', 15)
         //loadAnimatedModel('./models/xbot/', 'xbot.fbx', 0.1, 'walking.fbx')
         //loadAnimatedModelWithControls()
         //loadAnimatedModelWithControlsAndThirdPersonCamera()
+        loadAnimatedModelWithControlsAndThirdPersonCameraAndPhysics()
         RAF() //request animation frame --updates
     })
 }
@@ -180,6 +204,23 @@ const initializeBoxWithPhysics = () => {
     rigidBodies.push({ mesh: box, rigidBody: rbBox })
 }
 
+const initializeCylinderWithPhysics = () => {
+    const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 10, 64), new THREE.MeshBasicMaterial({color: 0xffff00}))
+    cylinder.position.set(25, 30, 20)
+    cylinder.castShadow = true
+    cylinder.receiveShadow = true
+    scene.add(cylinder)
+
+    const rbCylinder = new RigidBody()
+    rbCylinder.createCylinder(1, cylinder.position, cylinder.quaternion, 10, 10 )
+    rbCylinder.setRestitution(0.25)
+    rbCylinder.setFriction(1)
+    rbCylinder.setRollingFriction(5)
+    physicsWorld.addRigidBody(rbCylinder.body_)
+
+    rigidBodies.push({ mesh: cylinder, rigidBody: rbCylinder })
+}
+
 const initializeOrbitControls = () => {
     orbControls = new OrbitControls(camera, renderer.domElement)
     orbControls.target.set(0, 0, 0)
@@ -253,6 +294,21 @@ const loadAnimatedModelWithControlsAndThirdPersonCamera = () => {
     const params = {
         camera: camera,
         scene: scene
+    }
+    controls = new BasicCharacterController(params)
+
+    thirdPersonCamera = new ThirdPersonCamera({
+        camera: camera,
+        target: controls
+    })
+}
+
+const loadAnimatedModelWithControlsAndThirdPersonCameraAndPhysics = () => {
+    const params = {
+        camera: camera,
+        scene: scene,
+        physicsWorld,
+        rigidBodies
     }
     controls = new BasicCharacterController(params)
 
