@@ -11,8 +11,8 @@ export default class BasicCharacterController {
 
         this._params = params
         this._physicsWorld = params.physicsWorld
-        console.log(this._physicsWorld)
         this._rigidBodies = params.rigidBodies
+        this._tmpTransform = params.tmpTransform
         this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0)
         this._acceleration = new THREE.Vector3(1.5, 0.5, 85.0)
         this._velocity = new THREE.Vector3(0, 0, 0)
@@ -30,8 +30,8 @@ export default class BasicCharacterController {
     _GetFbxSize() {
         //size's x, y, z are width, height, depth.
         let box3 = new THREE.Box3().setFromObject(this._target)
-        let size = new THREE.Vector3()
-        return box3.getSize(size)
+        let fbxSize = new THREE.Vector3()
+        return box3.getSize(fbxSize)
     }
 
     _LoadModels() {
@@ -40,7 +40,7 @@ export default class BasicCharacterController {
         loader.load('xbot.fbx', (fbx) => {
             fbx.name = 'xbot'
             fbx.scale.setScalar(0.1)
-            fbx.position.set(0, 8, 0)
+            fbx.position.set(0, 20, 0)
             fbx.traverse(c => {
                 c.castShadow = true
                 c.receiveShadow = true
@@ -67,14 +67,23 @@ export default class BasicCharacterController {
                 }
             }
 
+            const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 10, 64), new THREE.MeshBasicMaterial({color: 0xffff00}))
+            cylinder.position.set(this._target.position.x, this._target.position.y, this._target.position.z)
+            cylinder.castShadow = true
+            cylinder.name = 'xbot'
+            cylinder.receiveShadow = true
+            this._params.scene.add(cylinder)
+            
+            console.log(cylinder)
+
             const rbCylinder = new RigidBody()
-            rbCylinder.createCylinder(1, this._target.position, this._target.quaternion, 5, 1 )
-            rbCylinder.setRestitution(0.25)
-            rbCylinder.setFriction(1)
-            rbCylinder.setRollingFriction(5)
+            rbCylinder.createCylinder(1, cylinder.position, cylinder.quaternion, 4, 10)
+            rbCylinder.setRestitution(0)
+            rbCylinder.setFriction(3)
+            rbCylinder.setRollingFriction(6)
             this._physicsWorld.addRigidBody(rbCylinder.body_)
 
-            this._rigidBodies.push({ mesh: this._target, rigidBody: rbCylinder })
+            this._rigidBodies.push({ mesh: cylinder, rigidBody: rbCylinder })
 
             const loader = new FBXLoader(this._manager)
             loader.setPath('./models/xbot/')
@@ -97,99 +106,68 @@ export default class BasicCharacterController {
         return this._target.quaternion;
     }
 
-    Update(timeInSeconds) {
+    _updateControls(body, timeInSeconds) {
+
         if (!this._target || !this._stateMachine._currentState) {
             return
         }
+        
+        let resultantImpulse = new Ammo.btVector3()
+
         this._stateMachine.Update(timeInSeconds, this._input)
-        const velocity = this._velocity
-        const frameDecceleration = new THREE.Vector3(
-            velocity.x * this._decceleration.x,
-            velocity.y * this._decceleration.y,
-            velocity.z * this._decceleration.z
-        )
-        frameDecceleration.multiplyScalar(timeInSeconds)
-        frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
-            Math.abs(frameDecceleration.z), Math.abs(velocity.z))
-    
-        velocity.add(frameDecceleration)
-    
-        const controlObject = this._target
-        const _Q = new THREE.Quaternion()
-        const _A = new THREE.Vector3()
-        const _R = controlObject.quaternion.clone()
-        let velToRotate = 2.5
-    
-        const acc = this._acceleration.clone()
-        if (this._input._keys.shift) {
-            acc.multiplyScalar(2.0)
-        }
-    
+
+        let scalingFactor = 20
+
         if (this._stateMachine._currentState.Name == 'dance') {
-            acc.multiplyScalar(0.0)
+
+        }
+
+        if (this._input._keys.forward) {
+            console.log(`frente`)
+            resultantImpulse.setValue(0, 0, 1)
+            resultantImpulse.op_mul(scalingFactor)
+            body.body_.setLinearVelocity(resultantImpulse)
         }
     
         if (this._input._keys.forward && !this._input._keys.backward) {
-            velocity.z += acc.z * timeInSeconds;
+            
         }
         if (this._input._keys.backward && !this._input._keys.forward) {
-            velocity.z -= acc.z/2 * timeInSeconds;
+           
         }
         if (this._input._keys.backward && this._input._keys.forward) {
-            this._stateMachine.SetState('idle')
+            
         }
         if (this._input._keys.left && !(this._stateMachine._currentState.Name == 'idle')) {
             if (!(this._stateMachine._currentState.Name == 'dance')) {
-                if (!this._input._keys.forward) velocity.z += acc.z/2 * timeInSeconds
-                if (this._input._keys.shift && !this._input._keys.backward) velocity.z += acc.z/2 * timeInSeconds
-                if (this._input._keys.backward) {
-                    velToRotate = 0.5
-                    velocity.z -= acc.z/4 * timeInSeconds
-                }
-                _A.set(0, 1, 0)
-                _Q.setFromAxisAngle(_A, velToRotate * Math.PI * timeInSeconds * this._acceleration.y)
-                _R.multiply(_Q)
+                if (!this._input._keys.forward)
+                if (this._input._keys.shift && !this._input._keys.backward)
+                if (this._input._keys.backward) {}
             }
         }
         if (this._input._keys.right && !(this._stateMachine._currentState.Name == 'idle')) {
             if (!(this._stateMachine._currentState.Name == 'dance')) {
-                if (!this._input._keys.forward) velocity.z += acc.z/2 * timeInSeconds
-                if (this._input._keys.shift && !this._input._keys.backward) velocity.z += acc.z/2 * timeInSeconds
-                if (this._input._keys.backward) {
-                    velToRotate = 0.5
-                    velocity.z -= acc.z/4 * timeInSeconds
-                }
-                _A.set(0, 1, 0)
-                _Q.setFromAxisAngle(_A, velToRotate * -Math.PI * timeInSeconds * this._acceleration.y)
-                _R.multiply(_Q)
+                if (!this._input._keys.forward)
+                if (this._input._keys.shift && !this._input._keys.backward)
+                if (this._input._keys.backward) {}
             }
         }
     
-        controlObject.quaternion.copy(_R)
-    
-        const oldPosition = new THREE.Vector3()
-        oldPosition.copy(controlObject.position)
-    
-        const forward = new THREE.Vector3(0, 0, 1)
-        forward.applyQuaternion(controlObject.quaternion)
-        forward.normalize()
-    
-        const sideways = new THREE.Vector3(1, 0, 0)
-        sideways.applyQuaternion(controlObject.quaternion)
-        sideways.normalize()
-    
-        sideways.multiplyScalar(velocity.x * timeInSeconds)
-        forward.multiplyScalar(velocity.z * timeInSeconds)
-    
-        controlObject.position.add(forward)
-        controlObject.position.add(sideways)
-    
-        oldPosition.copy(controlObject.position)
-
-        this._position.copy(controlObject.position);
-    
         if (this._mixer) {
             this._mixer.update(timeInSeconds)
+        }
+    }
+
+    Update(timeInSeconds) {
+        for (let i = 0; i < this._rigidBodies.length; i++) {
+            this._rigidBodies[i].rigidBody.motionState_.getWorldTransform(this._tmpTransform)
+            const pos = this._tmpTransform.getOrigin()
+            const quat = this._tmpTransform.getRotation()
+            const pos3 = new THREE.Vector3(pos.x(), pos.y(), pos.z())
+            const quat3 = new THREE.Quaternion(quat.x(), quat.y(), quat.z(), quat.w())
+            this._rigidBodies[i].mesh.position.copy(pos3)
+            if (!(this._rigidBodies[i].mesh.name === 'xbot')) this._rigidBodies[i].mesh.quaternion.copy(quat3)
+            if (this._rigidBodies[i].mesh.name === 'xbot') this._updateControls(this._rigidBodies[i].rigidBody, timeInSeconds)
         }
     }
 }

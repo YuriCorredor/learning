@@ -81,7 +81,7 @@ const main = () => {
         initializeGroundWithPhysics()
         //initializeBoxWithPhysics()
         initializeCylinderWithPhysics()
-        //initializeOrbitControls()
+        initializeOrbitControls()
         //loadStaticModel('./models/car/car.gltf', 15)
         //loadAnimatedModel('./models/xbot/', 'xbot.fbx', 0.1, 'walking.fbx')
         //loadAnimatedModelWithControls()
@@ -205,14 +205,14 @@ const initializeBoxWithPhysics = () => {
 }
 
 const initializeCylinderWithPhysics = () => {
-    const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 10, 64), new THREE.MeshBasicMaterial({color: 0xffff00}))
+    const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 10, 64), new THREE.MeshBasicMaterial({color: 0xffff00}))
     cylinder.position.set(25, 30, 20)
     cylinder.castShadow = true
     cylinder.receiveShadow = true
     scene.add(cylinder)
 
     const rbCylinder = new RigidBody()
-    rbCylinder.createCylinder(1, cylinder.position, cylinder.quaternion, 10, 10 )
+    rbCylinder.createCylinder(1, cylinder.position, cylinder.quaternion, 4, 10 )
     rbCylinder.setRestitution(0.25)
     rbCylinder.setFriction(1)
     rbCylinder.setRollingFriction(5)
@@ -305,17 +305,20 @@ const loadAnimatedModelWithControlsAndThirdPersonCamera = () => {
 
 const loadAnimatedModelWithControlsAndThirdPersonCameraAndPhysics = () => {
     const params = {
-        camera: camera,
-        scene: scene,
+        camera,
+        scene,
         physicsWorld,
-        rigidBodies
+        rigidBodies,
+        tmpTransform
     }
     controls = new BasicCharacterController(params)
 
+    /*
     thirdPersonCamera = new ThirdPersonCamera({
         camera: camera,
         target: controls
     })
+    */
 }
 
 const RAF = () => {
@@ -338,19 +341,9 @@ const RAF = () => {
     
         if (controls) controls.Update(timeElapsedSeconds)
 
-        if (thirdPersonCamera) thirdPersonCamera.Update(timeElapsedSeconds)
-
         if (physicsWorld) physicsWorld.stepSimulation(timeElapsedSeconds, 10)
 
-        for (let i = 0; i < rigidBodies.length; i++) {
-            rigidBodies[i].rigidBody.motionState_.getWorldTransform(tmpTransform)
-            const pos = tmpTransform.getOrigin()
-            const quat = tmpTransform.getRotation()
-            const pos3 = new THREE.Vector3(pos.x(), pos.y(), pos.z())
-            const quat3 = new THREE.Quaternion(quat.x(), quat.y(), quat.z(), quat.w())
-            rigidBodies[i].mesh.position.copy(pos3)
-            rigidBodies[i].mesh.quaternion.copy(quat3)
-        }
+        if (thirdPersonCamera) thirdPersonCamera.Update(timeElapsedSeconds)
 
     }
 }
