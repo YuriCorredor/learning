@@ -1,9 +1,9 @@
 const express = require('express')
-const { getAllEmails, getAllEmailsStatic } = require('../controllers/emails')
+const { getAllEmails, emailSent } = require('../controllers/emails')
 
 const router = express.Router()
 
 router.route('/').get(getAllEmails)
-router.route('/static').get(getAllEmailsStatic)
+router.route('/sent').get(emailSent)
 
 module.exports = router

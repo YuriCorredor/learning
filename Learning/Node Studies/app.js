@@ -14,6 +14,7 @@ const mongoUri = process.env.MONGO_URI
 //middlewares
 app.use(express.json())
 
+//routes
 app.use('/api/v1/emails', emailsRouter)
 
 //middlewares for handeling errors

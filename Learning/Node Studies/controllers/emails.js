@@ -1,14 +1,31 @@
+const Emails = require('../models/emails')
+const EmailsSent = require('../models/emailsSent')
 
-const  getAllEmailsStatic = async (req, res) => {
-    throw new Error('testing async errors')
-    res.status(200).json({msg: 'testing'})
+const emailSent = async (req, res) => {
+
+    const { emailFrom, emailTo } = req.query
+
+    console.log(emailFrom, emailTo)
+    const email = await EmailsSent.create({emailFrom, emailTo})
+    console.log(email)
+
+    res.status(200).json({})
 }
 
 const  getAllEmails = async (req, res) => {
-    res.status(200).json({msg: 'this is not a test'})
+
+    const { email } = req.query
+    const queryObject = {}
+
+    if (email) {
+        queryObject.email = { $regex: email, $options: 'i' }
+    }
+
+    const emails = await Emails.find(queryObject)
+    res.status(200).json({ nbHits: emails.length, emails })
 }
 
 module.exports = {
     getAllEmails,
-    getAllEmailsStatic
+    emailSent
 }
