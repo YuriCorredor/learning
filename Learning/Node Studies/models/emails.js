@@ -13,3 +13,5 @@ const emailsSchema = new mongoose.Schema({
         required:[true, 'Zip code must be provided.']
     }
 })
+
+module.exports = mongoose.model('emails', emailsSchema)
