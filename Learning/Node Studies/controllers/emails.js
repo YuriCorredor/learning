@@ -4,11 +4,7 @@ const EmailsSent = require('../models/emailsSent')
 const emailSent = async (req, res) => {
 
     const { emailFrom, emailTo } = req.query
-
-    console.log(emailFrom, emailTo)
     const email = await EmailsSent.create({emailFrom, emailTo})
-    console.log(email)
-
     res.status(200).json({})
 }
 
