@@ -9,6 +9,7 @@
   "author": "YuriCorredor",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "csv-parser": "^3.0.0",
     "dotenv": "^11.0.0",
     "express": "^4.17.2",
