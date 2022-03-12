@@ -80,13 +80,14 @@ const main = () => {
         //initializeGround()
         initializeGroundWithPhysics()
         //initializeBoxWithPhysics()
-        initializeCylinderWithPhysics()
+        //initializeCylinderWithPhysics()
         initializeOrbitControls()
+        test()
         //loadStaticModel('./models/car/car.gltf', 15)
         //loadAnimatedModel('./models/xbot/', 'xbot.fbx', 0.1, 'walking.fbx')
         //loadAnimatedModelWithControls()
         //loadAnimatedModelWithControlsAndThirdPersonCamera()
-        loadAnimatedModelWithControlsAndThirdPersonCameraAndPhysics()
+        //loadAnimatedModelWithControlsAndThirdPersonCameraAndPhysics()
         RAF() //request animation frame --updates
     })
 }
@@ -321,6 +322,23 @@ const loadAnimatedModelWithControlsAndThirdPersonCameraAndPhysics = () => {
     */
 }
 
+const test = () => {
+    const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 10, 64), new THREE.MeshBasicMaterial({color: 0xffff00}))
+    cylinder.castShadow = true
+    cylinder.receiveShadow = true
+    cylinder.position.set(0, 20, 0)
+    scene.add(cylinder)
+    //attach a char to it
+    const params = {
+        camera,
+        scene,
+        physicsWorld,
+        rigidBodies,
+        tmpTransform
+    }
+    controls = new BasicCharacterController(params)
+}
+
 const RAF = () => {
     requestAnimationFrame(t => {
         if (previousRAF === null) {
@@ -338,6 +356,8 @@ const RAF = () => {
         const timeElapsedSeconds = timeElapsed / 1000
 
         if (mixers) mixers.map(m => m.update(timeElapsedSeconds))
+
+        console.log(controls)
     
         if (controls) controls.Update(timeElapsedSeconds)
 

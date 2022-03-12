@@ -13,11 +13,6 @@ export default class BasicCharacterController {
         this._physicsWorld = params.physicsWorld
         this._rigidBodies = params.rigidBodies
         this._tmpTransform = params.tmpTransform
-        this._decceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0)
-        this._acceleration = new THREE.Vector3(1.5, 0.5, 85.0)
-        this._velocity = new THREE.Vector3(0, 0, 0)
-        this._position = new THREE.Vector3();
-
         this._animations = {}
         this._input = new BasicCharacterControllerInput()
         this._stateMachine = new CharacterFSM(
@@ -25,13 +20,6 @@ export default class BasicCharacterController {
         )
 
         this._LoadModels()
-    }
-
-    _GetFbxSize() {
-        //size's x, y, z are width, height, depth.
-        let box3 = new THREE.Box3().setFromObject(this._target)
-        let fbxSize = new THREE.Vector3()
-        return box3.getSize(fbxSize)
     }
 
     _LoadModels() {
@@ -49,7 +37,6 @@ export default class BasicCharacterController {
                 }
             })
             this._target = fbx
-            this._fbxSize = this._GetFbxSize()
             this._params.scene.add(this._target)
             this._mixer = new THREE.AnimationMixer(this._target)
             this._manager = new THREE.LoadingManager()
@@ -66,24 +53,6 @@ export default class BasicCharacterController {
                     action: action,
                 }
             }
-
-            const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 10, 64), new THREE.MeshBasicMaterial({color: 0xffff00}))
-            cylinder.position.set(this._target.position.x, this._target.position.y, this._target.position.z)
-            cylinder.castShadow = true
-            cylinder.name = 'xbot'
-            cylinder.receiveShadow = true
-            this._params.scene.add(cylinder)
-            
-            console.log(cylinder)
-
-            const rbCylinder = new RigidBody()
-            rbCylinder.createCylinder(1, cylinder.position, cylinder.quaternion, 4, 10)
-            rbCylinder.setRestitution(0)
-            rbCylinder.setFriction(3)
-            rbCylinder.setRollingFriction(6)
-            this._physicsWorld.addRigidBody(rbCylinder.body_)
-
-            this._rigidBodies.push({ mesh: cylinder, rigidBody: rbCylinder })
 
             const loader = new FBXLoader(this._manager)
             loader.setPath('./models/xbot/')
