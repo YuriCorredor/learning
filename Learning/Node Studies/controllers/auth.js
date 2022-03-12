@@ -2,7 +2,15 @@ const User = require('../models/users')
 const bcrypt = require('bcryptjs')
 
 const login = async (req, res) => {
-    res.status(200).json({})
+    const { email, name, password } = req.body
+
+    const user = await User.findOne({ email })
+    if (!user) return res.status(401).json({ msg: `User with email ${email} was not found.` })
+
+    const passwordValid = await bcrypt.compare(password, user.password)
+    if (!passwordValid) return res.status(401).json({ msg: `Email or password is wrong.` })
+
+    res.status(200).json({ msg: 'Logged In!' })
 }
 
 const register = async (req, res) => {
