@@ -15,7 +15,7 @@ const login = async (req, res) => {
 
     const token = jwt.sign({_id: user._id}, jwtSecret)
 
-    res.header('token', token).status(200).json({ msg: 'Logged in!' })
+    res.header('auth-token', token).status(200).json({ msg: 'Logged in!' })
 }
 
 const register = async (req, res) => {
