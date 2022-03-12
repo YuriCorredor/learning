@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
         req.user = jwtInfo
         next()
     } catch (error) {
-        throw(error)
+        res.status(401).json({ msg: `Token is invalid.` })
     }
 
 }

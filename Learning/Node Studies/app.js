@@ -6,6 +6,8 @@ const errorHandlerMiddleware = require('./middleware/errorHandler')
 const connectDB = require('./db/connect')
 const emailsRouter = require('./routes/emails')
 const authRouter = require('./routes/auth')
+const privateTestRoutesRouter = require('./routes/privateTestRoutes')
+const loginRequired = require('./middleware/auth')
 
 const app = express()
 
@@ -18,6 +20,7 @@ app.use(express.json())
 //routes
 app.use('/api/v1/emails', emailsRouter)
 app.use('/auth', authRouter)
+app.use('/private', loginRequired, privateTestRoutesRouter)
 
 //middlewares for handeling errors
 app.use(notFoundMiddleware)
