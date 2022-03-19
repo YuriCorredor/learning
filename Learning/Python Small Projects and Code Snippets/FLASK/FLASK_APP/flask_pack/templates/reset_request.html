@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block content %}
+<link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='teste.css') }}"
+    />
+<div class="container register-form center">
+  <div class="form">
+    <div class="note">
+      <p>Trocar Senha</p>
+    </div>
+    <form class="form-content" method="POST" action="">
+      {{ form.hidden_tag() }}
+      <div class="row">
+        <div class="col">
+            <label for="exampleInputEmail1">Email</label>
+            {% if form.email.errors %} {{ form.email(class="form-control
+            is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.email.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %} {{ form.email(class="form-control") }} {% endif %}
+        </div>
+      </div>
+      {{ form.submit(class="btn btnSubmit margin-top") }}
+    </form>
+  </div>
+</div>
+</div>
+
+{% endblock content %}

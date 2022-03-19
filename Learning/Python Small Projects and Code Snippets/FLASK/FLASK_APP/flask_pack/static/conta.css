@@ -1,0 +1,72 @@
+.form {
+  border-style: solid;
+  margin-top: 10rem;
+  background: -webkit-linear-gradient(
+    left,
+    #0a346852,
+    rgba(230, 152, 230, 0.274)
+  );
+  -webkit-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 75);
+  -moz-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 75);
+  box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 75);
+  border-radius: 1.5rem;
+}
+
+.form-control {
+  border-radius: 1.5rem;
+}
+
+.title {
+  margin-bottom: 1rem;
+  /* deslocamento-x | deslocamento-y | raio-de-desfoque | cor */
+  text-shadow: 1px 1px 2px black;
+}
+
+.lindo {
+  margin-top: 0.1rem;
+  font-size: 10px;
+}
+
+body {
+  background-image: url(/static/imagens/entrepreneur-1340649_1920.jpg);
+  /* deslocamento-x | deslocamento-y | raio-de-desfoque | cor */
+  text-shadow: 0.35rem 0.35rem 1rem black;
+  font-size: 1rem;
+}
+
+.form-group {
+  color: white;
+  margin-left: 0.3rem;
+  margin-top: 0.3rem;
+  padding-right: 0.2rem;
+}
+
+.btnSubmit {
+  border: none;
+  border-radius: 1.5rem;
+  padding: 1%;
+  width: 20%;
+  cursor: pointer;
+  background: #0062cc;
+  color: #fff;
+}
+
+.form-content {
+  padding: 5%;
+  text-shadow: 0.2rem 0.2rem 1rem black;
+  font-weight: 800;
+}
+
+.center {
+  margin-top: 2.5rem;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .center {
+    margin-top: 0rem;
+  }
+  .form {
+    margin-top: 5rem;
+  }
+}

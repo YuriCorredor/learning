@@ -1,0 +1,161 @@
+{% extends "layout.html" %} {% block content %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static', filename='forum.css') }}"
+/>
+
+{% for post in posts.items %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-auto col-like col-footer">
+            {% if current_user.has_liked_post(post) %}
+            <a
+            id = 'deslike{{post.id}}'
+            onclick="like('{{post.id}}', '{{current_user.id}}')"
+            class="margin-bottom deslike"
+            title="DESLIKE">
+          <img src="/static/imagens/me-gusta.png" height="21px" width="21px" />
+          <div id ="{{post.id}}">
+            {{ post.likes.count() }}
+          </div>
+      </a>
+     {% else %}
+     <a
+        id = 'like{{post.id}}'
+        onclick="like('{{post.id}}', '{{current_user.id}}')"
+        class="margin-bottom like"
+        title="LIKE">
+          <img src="/static/imagens/me-gusta.png" height="21px" width="21px" />
+          <div id ="{{post.id}}">
+            {{ post.likes.count() }}
+          </div>
+          </a>
+          {% endif %}
+        </div>
+        <div class="col col-name col-footer">
+            <img class="rounded-circle" src="{{ url_for('static', filename='profile_pic/') + post.author.image_file }}" alt="IMG" width="28px" length="28px"/>
+            {{ post.author.username }}
+        </div>
+        <div class="col col-name col-footer">
+            <p class="text-secondary">Postado: {{ post.date_posted.strftime('%Y-%m-%d') }}</p>
+        </div>
+    </div>
+    <div class="row justify-content-around back">
+        <div class="col-md-auto col-footer">
+           <h2 class="title">{{ post.title }}</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-footer">
+            <p class="post">{{ post.content }}</p>
+        </div>
+    </div>
+    <div class="row">
+        {% if post.author == current_user or current_user.perm == True %}
+            <div class="col justify-content-end col-update col-footer">
+            <a href="{{ url_for('update_post', post_id=post.id) }}" 
+            title="UPDATE"
+            data-target="update"
+            class="margin-bottom">
+                <img src="/static/imagens/lazo.png" height="21px" width="21px">
+                </a>
+                <a
+                class="margin-bottom"
+                title="DELETAR"
+                data-toggle="modal"
+                data-target="#deleteModal{{ post.id }}">
+                <img src="/static/imagens/trash.png" height="21px" width="21px" />
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="deleteModal{{ post.id }}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteModal{{ post.id }}Label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModal{{ post.id }}Label">
+          Deletar postagem?
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h2>Você tem certeza disso?</h2>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Fechar
+        </button>
+        <form
+          action="{{ url_for('delete_post', post_id=post.id) }}"
+          method="POST"
+        >
+          <input type="submit" class="btn btn-danger" value="Deletar" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<div class="row-page-num">
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1,
+    right_current=2) %} {% if page_num %} {% if posts.page == page_num %}
+    <a
+      class="btn btn-info mb-4 align"
+      href="{{ url_for('forum', page=page_num) }}"
+      >{{ page_num }}</a
+    >
+    {% else %}
+    <a
+      class="btn btn-outline-info mb-4 align-left"
+      href="{{ url_for('forum', page=page_num) }}"
+      >{{ page_num }}</a
+    >
+    {% endif %} {% else %} ... {% endif %} {% endfor %}
+  </div>
+  <div id="contact">
+    <footer>
+      <div class="row justify-content-center text-center">
+        <div class="col col-footer">
+          <img class="img_grande" src="/static/imagens/correman.png" alt="IMG" />
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea explicabo
+            nostrum laborum? Accusantium a doloremque beatae, vel nostrum
+            voluptatum blanditiis?
+          </p>
+          <strong>CONTATOS</strong>
+          <p>(21)9999-99999<br />email@teste.com</p>
+          <a href="#" target="_blank"
+            ><img
+              src="/static/imagens/instagram-sketched.png"
+              width="30px"
+              length="30px"
+          /></a>
+          <a href="https://www.facebook.com/ariel.baker.94064" target="_blank"
+            ><img src="/static/imagens/facebook.png" width="30px" length="30px"
+          /></a>
+        </div>
+      </div>
+    </footer>
+  </div>
+{% endblock content %}
+{% block script %}
+<script src="{{url_for('static', filename='js/darLike.js')}}"></script>
+{% endblock script %}

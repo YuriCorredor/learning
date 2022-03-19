@@ -1,0 +1,4 @@
+*.evn
+FLASK/FLASK_APP/__pycache__
+FLASK/FLASK_APP/flask_pack/__pycache__
+*.vscode

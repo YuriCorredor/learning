@@ -1,0 +1,148 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
+body {
+  overflow-x: hidden;
+  font-family: "lato", sans-serif;
+  background-color: rgb(218, 224, 230);
+  color: rgb(38, 38, 38)
+}
+
+.col-update {
+  text-align: right;
+  margin-bottom: 0.3rem !important;
+}
+
+.text-secondary {
+  text-align: right;
+}
+
+.nodisplay {
+  display: none;
+}
+
+.row-page-num {
+  margin-left: 5.4rem;
+  margin-top: 1rem;
+}
+
+.margin-bottom {
+  margin-top: 0.1rem;
+  margin-bottom: 0rem !important;
+  text-align: center;
+}
+
+
+.navbar {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+  background: rgb(26, 26, 27) !important;
+}
+
+.container {
+  margin-top: 5rem;
+  border-radius: 0.4rem;
+  background-color: rgb(255, 255, 255);
+  border-color: white;
+  word-break: break-all
+}
+
+.col-name {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.col-right {
+  text-align: right;
+}
+
+.title {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.post {
+  margin-top: 2rem;
+  white-space: pre-wrap;
+  white-space: pre-line;
+  text-align: justify;
+}
+
+.btn-group-sm {
+  margin-bottom: 0.5rem;
+}
+
+.dropdown-item {
+  color: rgb(215, 218, 220);
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.2);
+  font-family: "lato", sans-serif;
+  text-transform: uppercase;
+}
+
+.dropdown-menu {
+  margin-top: 0.5rem;
+  margin-right: 0.1rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+a {
+  color: inherit;
+}
+
+#contact {
+  position: relative;
+  min-height: 100vh;
+}
+
+footer {
+  background-color: rgb(26, 26, 27);
+  bottom: 0;
+  width: 100%;
+  margin-top: 0rem !important;
+  position: absolute;
+}
+
+/*media queries*/
+
+@media (max-width: 767px) {
+  .navbar {
+    font-size: 0.8rem;
+  }
+
+  .carousel-caption h1 {
+    font-size: 2rem;
+    letter-spacing: 0.15rem;
+    padding-bottom: 0.5rem;
+  }
+  .carousel-caption h3 {
+    font-size: 0.8rem;
+    padding-bottom: 1.2rem;
+  }
+  .btn-lg {
+    font-size: 1rem;
+  }
+  .dropdown-menu {
+    margin-left: 0.35rem;
+    background: rgba(0, 0, 0, 0.2);
+    color: rgb(215, 218, 220);
+  }
+
+  .img_grande {
+    height: 48px;
+    width: 350px;
+  }
+
+  .row-page-num {
+    margin-left: 0rem;
+    margin-top: 1rem;
+  }
+.col-like {
+  align-content: center;
+  text-align: center;
+  background-color: rgb(248, 249, 250);
+  height: 3rem;
+}
+}

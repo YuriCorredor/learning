@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block content %}
+<link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='teste.css') }}"
+    />
+<div class="container register-form">
+  <div class="form">
+    <div class="note">
+      <p>Registando-se</p>
+    </div>
+    <form class="form-content" method="POST" action="">
+      {{ form.hidden_tag() }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group center">
+            <label for="exampleInputEmail1">Usuário</label>
+            {% if form.username.errors %} {{
+            form.username(class="form-control is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.username.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %} {{ form.username(class="form-control") }} {% endif
+            %}
+          </div>
+          <div class="form-group center">
+            <label for="exampleInputEmail1">Email</label>
+            {% if form.email.errors %} {{ form.email(class="form-control
+            is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.email.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %} {{ form.email(class="form-control") }} {% endif %}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group center">
+            <label for="exampleInputEmail1">Senha</label>
+            {% if form.password.errors %} {{
+            form.password(class="form-control is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.password.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %} {{ form.password(class="form-control") }} {% endif
+            %}
+          </div>
+          <div class="form-group center">
+            <label for="exampleInputEmail1">Confirmar senha</label>
+            {% if form.password2.errors %} {{
+            form.password2(class="form-control is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.password2.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %} {{ form.password2(class="form-control") }} {% endif
+            %}
+          </div>
+        </div>
+      </div>
+      {{ form.submit(class="btn btnSubmit") }}
+      <small class="lindo"
+        >Já tem uma conta?
+        <a class="ml-2" href="{{ url_for('login') }}"
+          >Clique aqui!</a
+        ></small
+      >
+    </form>
+  </div>
+</div>
+</div>
+
+{% endblock content %}

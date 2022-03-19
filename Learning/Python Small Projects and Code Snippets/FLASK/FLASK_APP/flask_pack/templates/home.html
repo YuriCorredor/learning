@@ -1,0 +1,270 @@
+<!-- USED FOR TEMPLATE INHERITANCE -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='main.css') }}"
+    />
+    {%if title%}
+    <title>Correman - {{title}}</title>
+    {%else%}
+    <title>Correman</title>
+    {%endif%}
+  </head>
+  <body data-spy="scroll" data-target="#navbarResponsive">
+    <div id="home">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="{{url_for('home')}}"
+          ><img
+            src="/static/imagens/CorremanColoridoSemFundo (1).png"
+            alt="IMG"
+            width="35px"
+            length="35px"
+        /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarResponsive"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#carouselExampleIndicators">inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#projects">Projetos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact">contatos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('forum') }}">forum</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('new_post') }}"
+                >Nova postagem</a
+              >
+            </li>
+            {% if current_user.is_authenticated %}
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-dark btn-primary dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img
+                  class="rounded-circle border"
+                  src="{{ image_file }}"
+                  alt="IMG"
+                  width="25px"
+                  length="25px"
+                  height="25px"
+                />
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="{{url_for('conta')}}">
+                  <button class="dropdown-item" type="button">
+                    conta
+                    <img
+                      src="/static/imagens/usuario.png"
+                      height="24px"
+                      width="24px"
+                    /></button
+                ></a>
+
+                <a href="{{url_for('logout')}}"
+                  ><button class="dropdown-item" type="button">
+                    sair
+                    <img
+                      src="/static/imagens/cerrar-sesion.png"
+                      height="24px"
+                      width="24px"
+                    /></button
+                ></a>
+              </div>
+            </div>
+            {% else %}
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-secondary btn-dark dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                ENTRAR
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="{{url_for('login')}}">
+                  <button class="dropdown-item" type="button">login</button></a
+                >
+                <a href="{{url_for('register')}}"
+                  ><button class="dropdown-item" type="button">
+                    registrar-se
+                  </button></a
+                >
+              </div>
+            </div>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+
+      <!--IMAGE SLIDER-->
+      <div
+        id="carouselExampleIndicators"
+        class="carousel slide"
+        data-ride="carousel"
+      >
+        <ol class="carousel-indicators">
+          <li
+            data-target="#carouselExampleIndicators"
+            data-slide-to="0"
+            class="active"
+          ></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div
+            class="carousel-item active"
+            data-interval="5000"
+            style="
+              background-image: url(/static/imagens/entrepreneur-1340649_1920.jpg);
+            "
+          >
+            {% if current_user.is_authenticated %}
+            <div class="carousel-caption text-center">
+              <h1>Você agora faz parte da Correman</h1>
+              <h3>
+                Caso queira saber mais sobre nós, clique no botão abaixo
+              </h3>
+              <!-- LINK PARA SE INSCREVER AQUI: -->
+              <a class="btn btn-outline-light btn-lg" href="#contact"
+                >Saiba mais</a
+              >
+            </div>
+            {% else %}
+            <div class="carousel-caption text-center">
+              <h1>Bem-vindo a Correman</h1>
+              <h3>
+                Para receber novidades por email inscreva-se agora mesmo
+                clicando no botão
+              </h3>
+              <!-- LINK PARA SE ALGO AQUI: -->
+              <a
+                class="btn btn-outline-light btn-lg"
+                href="{{url_for('register')}}"
+                >Inscrever-se</a
+              >
+            </div>
+            {% endif %}
+          </div>
+          <div
+            class="carousel-item"
+            data-interval="5000"
+            style="
+              background-image: url(/static/imagens/student-849822_1920.jpg);
+            "
+          ></div>
+        </div>
+        <a
+          class="carousel-control-prev"
+          href="#carouselExampleIndicators"
+          role="button"
+          data-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a
+          class="carousel-control-next"
+          href="#carouselExampleIndicators"
+          role="button"
+          data-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+      <!--PROJECTS-->
+      <div id="projects">
+        <div class="row row-projects justify-content-center">
+          <div id="project-text" class="col">
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, rerum.</p>
+          </div>
+          <div id="project-img" class="col">
+            <img src="{{url_for('static', filename='imagens/respnsive-hero3.png')}}" alt="..." height="350px">
+          </div>
+        </div>
+      </div>
+      <!--FOOTER-->
+      <div id="contact">
+        <footer>
+          <div class="row justify-content-center text-center">
+            <div class="col col-footer">
+              <img
+                class="img_grande"
+                src="/static/imagens/correman.png"
+                alt="IMG"
+              />
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea
+                explicabo nostrum laborum? Accusantium a doloremque beatae, vel
+                nostrum voluptatum blanditiis?
+              </p>
+              <strong>CONTATOS</strong>
+              <p>(21)9999-99999<br />email@teste.com</p>
+              <a href="#" target="_blank"
+                ><img
+                  src="/static/imagens/instagram-sketched.png"
+                  width="30px"
+                  length="30px"
+              /></a>
+              <a
+                href="https://www.facebook.com/ariel.baker.94064"
+                target="_blank"
+                ><img
+                  src="/static/imagens/facebook.png"
+                  width="30px"
+                  length="30px"
+              /></a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.2/gsap.min.js"
+    integrity="sha512-pCPP9sfLW9T7EZiw725jUl+ux032sjGhFE+ZAx00C1iO55ZmZJWpfNGbDf2ZF5b0UqxRqSW548PbZEWmH+S7pA=="
+    crossorigin="anonymous"
+    ></script>
+    <script src="{{url_for('static', filename='js/animation.js')}}"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

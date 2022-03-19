@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block content %}
+<link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='conta.css') }}"
+    />
+
+<div class="container register-form">
+    <div class="form">
+        <form class="form-content" method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <img class="rounded-circle account-img border" src="{{ image_file }}" height="110px" width="110px">
+                    </div>
+                    <div class="form-group">
+                        <h2>{{ current_user.username }}</h1>
+                        <p>{{ current_user.email }}</p>
+                    </div>
+                    <div class="form-group">    
+                        <label for="exampleInputEmail1">Mudar foto de perfil</label>
+                        {{ form.pic(class="form-control-file") }}
+                        {% if form.pic.errors %}
+                            {% for error in form.pic.errors %}
+                                <span class="text-danger">{{ error }}</span></br>
+                            {% endfor %}
+                        {% endif %}
+                        <p>(Após escolher a sua foto, clique no botão "mudar")</p>
+                    </div>             
+                </div>
+                <div class="col-md-6 col-footer">
+                    <div class="form-group">
+                        <div class="center">
+                            <label for="exampleInputEmail1">Mudar usuário</label>
+                            {% if form.username.errors %} {{
+                            form.username(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                            </div>
+                            {% else %} {{ form.username(class="form-control") }} {% endif
+                            %}
+                        </div>
+                    </div>
+                        <div class="center">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Mudar email</label>
+                                {% if form.email.errors %} {{ form.email(class="form-control
+                                is-invalid") }}
+                                <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                                </div>
+                                {% else %} {{ form.email(class="form-control") }} {% endif %}
+                            </div>
+                        </div>
+                        <div class="center">
+                            {{ form.submit(class="btn btnSubmit") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+        
+{% endblock content %}

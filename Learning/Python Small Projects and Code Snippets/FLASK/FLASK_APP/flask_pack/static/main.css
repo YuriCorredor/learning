@@ -1,0 +1,150 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
+
+.border {
+  border-style: solid;
+  border-color: black !important;
+  border-spacing: 1rem;
+}
+
+.carousel {
+  max-width: 100%;
+  margin-bottom: 1rem;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: "lato", sans-serif;
+  color: white;
+  background-color: rgb(215, 218, 220);
+}
+
+/*-- navbar style */
+
+.navbar {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+.navbar-nav li {
+  padding-right: 1rem;
+}
+.navbar-dark .navbar-nav .navbar-link {
+  color: white;
+  padding-top: 0.8rem;
+}
+.navbar-dark .navbar-nav .navbar-link.active,
+.navbar-dark .navbar-nav .navbar-link:hover {
+  color: white;
+}
+
+/*-- slider*/
+
+.carousel-item {
+  color: rgb(215, 218, 220);
+  height: 100vh;
+}
+.carousel-caption {
+  position: absolute;
+  top: 38%;
+  text-transform: uppercase;
+}
+.carousel-caption h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.3rem;
+  text-shadow: 0.1rem 0.1rem 1rem black;
+  padding-bottom: 1rem;
+}
+.carousel-caption h3 {
+  font-size: 1.5rem;
+  text-shadow: 0.1rem 0.1rem 0.8rem black;
+  padding-bottom: 1.6rem;
+}
+.btn-lg {
+  border-width: medium;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+/*--contact*/
+
+footer {
+  background-color: rgb(26, 26, 27);
+  font-size: 0.8rem;
+  color: rgb(215, 218, 220);
+  padding: 2rem 0 3rem;
+  margin-top: 1rem;
+}
+.img_grande {
+  margin: 2rem 0;
+  height: 3.5rem;
+}
+
+/*dropdown-menu*/
+
+.dropdown-item {
+  color: white;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.2) !important;
+  font-family: "lato", sans-serif;
+  text-transform: uppercase;
+}
+
+.dropdown-menu {
+  margin-top: 0.6rem;
+  margin-right: 0.1rem;
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+
+.row-projects {
+  height: 63vh;
+  align-items: center;
+  background-color: white;
+  font-size: 21px;
+  margin: 0;
+  color: black;
+  font-family: "lato", sans-serif;
+  font-weight: 700;
+  text-shadow: 5px 5px 8px black;
+}
+
+/*media queries*/
+
+@media (max-width: 767px) {
+
+  * {
+    max-width: 100%;
+  }
+
+  .col-footer {
+    margin-left: 2rem;
+  }
+
+  .navbar {
+    font-size: 0.8rem;
+    max-width: 100%;
+  }
+  .carousel-caption h1 {
+    font-size: 2rem;
+    letter-spacing: 0.15rem;
+    padding-bottom: 0.5rem;
+  }
+  .carousel-caption h3 {
+    font-size: 0.8rem;
+    padding-bottom: 1.2rem;
+  }
+  .btn-lg {
+    font-size: 1rem;
+  }
+  .dropdown-menu {
+    background: rgba(0, 0, 0, 0.2) !important;
+  }
+  .img_grande {
+    height: 48px;
+    width: 350px;
+  }
+  
+}

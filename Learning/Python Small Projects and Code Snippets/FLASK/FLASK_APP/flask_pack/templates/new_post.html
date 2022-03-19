@@ -1,0 +1,51 @@
+{% extends "layout.html" %} 
+{% block content %} 
+<link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='conta.css') }}"
+    />
+
+<div class="container register-form">
+    <div class="form">
+        <form class="form-content" method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="row justify-content-md-center">
+                <div class="col-md-6 col-footer">
+                    <div class="form-group">
+                        <div class="center">
+                        <h1 class="title">{{ titulo }}</h1>
+                            <label for="exampleInputEmail1">Título</label>
+                            {% if form.title.errors %} {{
+                            form.title(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                            {% for error in form.title.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                            </div>
+                            {% else %} {{ form.title(class="form-control") }} {% endif
+                            %}
+                        </div>
+                    </div>
+                        <div class="center">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Conteúdo</label>
+                                {% if form.content.errors %} {{ form.content(class="form-control
+                                is-invalid") }}
+                                <div class="invalid-feedback">
+                                {% for error in form.content.errors %}
+                                <span>{{ error }}</span>
+                                {% endfor %}
+                                </div>
+                                {% else %} {{ form.content(class="form-control") }} {% endif %}
+                            </div>
+                        </div>
+                        <div class="center">
+                            {{ form.submit(class="btn btnSubmit") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock content %}

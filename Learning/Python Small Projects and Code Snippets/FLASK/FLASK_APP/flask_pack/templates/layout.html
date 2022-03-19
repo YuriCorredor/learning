@@ -1,0 +1,149 @@
+<!-- USED FOR TEMPLATE INHERITANCE -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='main.css') }}"
+    />
+    {%if title%}
+    <title>Correman - {{title}}</title>
+    {%else%}
+    <title>Correman</title>
+    {%endif%}
+  </head>
+  <body data-spy="scroll" data-target="#navbarResponsive">
+    <div id="home">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="{{url_for('home')}}"
+          ><img
+            src="/static/imagens/CorremanColoridoSemFundo (1).png"
+            alt="IMG"
+            width="35px"
+            length="35px"
+        /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarResponsive"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('home')}}">inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('home')}}">contatos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('forum')}}">forum</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('new_post')}}"
+                >nova postagem</a
+              >
+            </li>
+            {% if current_user.is_authenticated %}
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-secondary btn-dark dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <img
+                  class="rounded-circle border"
+                  src="{{ image_file }}"
+                  alt="IMG"
+                  width="25px"
+                  length="25px"
+                  height="25px"
+                />
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="{{url_for('conta')}}">
+                  <button class="dropdown-item" type="button">
+                    conta
+                    <img
+                      src="/static/imagens/usuario.png"
+                      height="24px"
+                      width="24px"
+                      length="24px"
+                    /></button
+                ></a>
+
+                <a href="{{url_for('logout')}}"
+                  ><button class="dropdown-item" type="button">
+                    sair
+                    <img
+                      src="/static/imagens/cerrar-sesion.png"
+                      height="24px"
+                      width="24px"
+                      length="24px"
+                    /></button
+                ></a>
+              </div>
+            </div>
+            {% else %}
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-secondary btn-dark dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                ENTRAR
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a href="{{url_for('login')}}">
+                  <button class="dropdown-item" type="button">login</button></a
+                >
+                <a href="{{url_for('register')}}"
+                  ><button class="dropdown-item" type="button">
+                    registrar-se
+                  </button></a
+                >
+              </div>
+            </div>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+
+      {%block slide%} {%endblock%} {%block content%} {%endblock%}
+    </div>
+    {%block script%} {%endblock%} 
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16x.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
