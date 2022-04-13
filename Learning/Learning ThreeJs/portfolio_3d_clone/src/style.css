@@ -1,0 +1,29 @@
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    background-color: black;
+}
+
+.webgl
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1vw;
+    height: 1vh;
+}
+
+.big-div {
+    position: absolute;
+    height: 8000px;
+    width: 1vw;
+}
