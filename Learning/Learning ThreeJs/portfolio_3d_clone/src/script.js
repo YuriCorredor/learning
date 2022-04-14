@@ -41,6 +41,39 @@ gltfLoader.load('/models/test/scene.gltf', gltf => {
     scene.add(gltf.scene)
 })
 
+const textureLoader = new THREE.TextureLoader()
+const matcapTexture = textureLoader.load('/texture.png')
+
+const loadShapes = (geometry, material, quantity, width, texture) => {
+    material.matcap = texture
+    for (let i = 0; i < quantity; i++) {
+        const shape = new THREE.Mesh(geometry, material)
+
+        shape.position.set(
+            (Math.random() - 0.5) * width,
+            (Math.random() - 0.5) * width,
+            (Math.random() - 0.5) * width
+        )
+
+        shape.rotation.set(
+            Math.random() * Math.PI,
+            Math.random() * Math.PI,
+            0
+        )
+
+        const scale = Math.random()
+        shape.scale.set(scale, scale, scale)
+
+        scene.add(shape)
+    }
+}
+
+const starsGeometry = new THREE.OctahedronBufferGeometry(0.1, 0)
+const starsMaterial = new THREE.MeshMatcapMaterial()
+
+loadShapes(starsGeometry, starsMaterial, 1000, 100, matcapTexture)
+
+
 /**
  * Lights
  */
