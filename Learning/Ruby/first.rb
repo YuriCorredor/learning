@@ -111,10 +111,10 @@ puts "y = change_x(x) => y = #{y} because change_x returns 4"
 
 # Exceptions
 
-print "Enter a number: "
-first_num = gets.to_i
-print "Enter another number: "
-second_num = gets.to_i
+# print "Enter a number: "
+# first_num = gets.to_i
+# print "Enter another number: "
+# second_num = gets.to_i
 
 begin
     answer = first_num / second_num
@@ -243,3 +243,83 @@ end
 dog = GermanShepard.new
 dog.name = "Max"
 printf "%s goes %s \n", dog.name, dog.bark # use %d for integers and %f for floats and, of couse, %s for strings
+
+require_relative "module"
+require_relative "module_smart"
+
+class Smart_human
+    include Human
+    include Smart
+end
+
+scientist = Smart_human.new
+
+puts scientist.act_smart
+
+scientist.name = "Einstein"
+puts scientist.name
+
+# Arrays
+
+array_1 = Array.new
+array_2 = Array.new(10)
+array_3 = Array.new(10, "empty")
+array_4 = [3, 1, 5.5, "seven", 6, 9]
+
+puts array_1, array_2, array_3, array_4
+
+puts array_4[2]
+puts array_4[2, 3].join(", ")
+puts array_4.values_at(0, 1, 3).join(", ")
+array_4.unshift(0)
+p array_4
+array_4.push(200, 300)
+p array_4
+array_4.pop
+p array_4
+array_4.concat([400, 500, 600])
+p array_4
+
+puts "Array size: #{array_4.size.to_s}"
+puts "Array contains 100: #{array_4.include?(100).to_s}"
+puts "How many 6: #{array_4.count(6).to_s}"
+puts "Array is empty: #{array_4.empty?.to_s}"
+
+# Hash
+
+number_hash = {
+    "PI" => 3.14,
+    "Golden" => 1.618,
+    "e" => 2.718
+}
+
+puts number_hash["PI"]
+
+superheroes = Hash["Clark", "Superman", "Bruce", "Batman"]
+
+puts superheroes["Clark"]
+
+superheroes["Barry"] = "Flash"
+puts superheroes["Clark"]
+
+hash = Hash.new("No such key")
+p hash["Dog"]
+
+superheroines = {
+    "Lisa" => "Aquagirl",
+    "Betty" => "Batgirl"
+}
+
+superheroes.update(superheroines)
+puts superheroes
+
+superheroes.each do |key, value|
+    puts "#{key.to_s} : #{value.to_s}"
+end
+
+puts "Has Key Lisa: #{superheroes.has_key?("Lisa")}"
+puts "Has Value Batman: #{superheroes.has_value?("Batman")}"
+puts "Is has empty: #{superheroes.empty?.to_s}"
+puts "Size of hash: #{superheroes.size.to_s}"
+superheroes.delete("Barry")
+puts "Size of hash: #{superheroes.size.to_s}"
