@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const jwtSecret = process.env.JWT_SECRET
+const jwtRefreshToken = process.env.JWT_REFRESH_TOKEN
 
 const login = async (req, res) => {
     const { email, name, password } = req.body
@@ -13,9 +14,10 @@ const login = async (req, res) => {
     const passwordValid = await bcrypt.compare(password, user.password)
     if (!passwordValid) return res.status(401).json({ msg: `Email or password is wrong.` })
 
-    const token = jwt.sign({_id: user._id}, jwtSecret)
+    const refreshToken = jwt.sign({ _id: user._id }, jwtRefreshToken, { expiresIn: '10d' })
+    const token = jwt.sign({ refreshToken }, jwtSecret, { expiresIn: '20s' })
 
-    res.header('auth-token', token).status(200).json({ msg: 'Logged in!' })
+    res.status(200).json({ token, refreshToken })
 }
 
 const register = async (req, res) => {
@@ -29,7 +31,19 @@ const register = async (req, res) => {
     res.status(200).json({ msg: `User ${name} was created!` })
 }
 
+const refresh = async (req, res) => {
+    const user = req.user
+    const refreshToken = req.refreshToken
+
+    console.log(user)
+    
+    const token = jwt.sign({ refreshToken }, jwtSecret, { expiresIn: '20s' })
+
+    res.status(200).json({ token, refreshToken })
+}
+
 module.exports = {
     login,
-    register
+    register,
+    refresh
 }
