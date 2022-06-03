@@ -1,0 +1,9 @@
+$primaryColor: #2a7ae3;
+$primaryColorDarker: #0b428a;
+$whiteColor: #f0f0f0;
+
+@mixin transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
