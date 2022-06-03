@@ -9,13 +9,13 @@ const login = async (req, res) => {
     const { email, name, password } = req.body
 
     const user = await User.findOne({ email })
-    if (!user) return res.status(401).json({ msg: `User with email ${email} was not found.` })
+    if (!user) return res.status(401).json({ message: `User with email ${email} was not found.` })
 
     const passwordValid = await bcrypt.compare(password, user.password)
-    if (!passwordValid) return res.status(401).json({ msg: `Email or password is wrong.` })
+    if (!passwordValid) return res.status(401).json({ message: `Email or password is wrong.` })
 
-    const refreshToken = jwt.sign({ _id: user._id }, jwtRefreshToken, { expiresIn: '10d' })
-    const token = jwt.sign({ refreshToken }, jwtSecret, { expiresIn: '20s' })
+    const token = jwt.sign({ _id: user._id } , jwtSecret, { expiresIn: '20s' })
+    const refreshToken = jwt.sign({ token }, jwtRefreshToken, { expiresIn: '10d' })
 
     res.status(200).json({ token, refreshToken })
 }
@@ -28,7 +28,7 @@ const register = async (req, res) => {
 
     const user = await User.create({ email, name, password: hashPassword })
 
-    res.status(200).json({ msg: `User ${name} was created!` })
+    res.status(200).json({ message: `User ${name} was created!` })
 }
 
 const refresh = async (req, res) => {

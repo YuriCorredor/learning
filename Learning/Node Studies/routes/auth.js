@@ -4,7 +4,7 @@ const { login, register, refresh } = require('../controllers/auth')
 
 const router = express.Router()
 
-router.route('/').get(login)
+router.route('/').post(login)
 router.route('/register').post(register)
 router.use(verifyRefreshToken).route('/refresh').post(refresh)
 
