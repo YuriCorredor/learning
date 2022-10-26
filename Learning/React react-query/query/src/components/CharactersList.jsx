@@ -18,10 +18,6 @@ export default function CharactersList() {
 
     if (isLoading) return <h1>loading...</h1>
     if (isError) return <h1>error: {error.message}</h1>
-
-    const scrollToTop = () => {
-        window.scroll({top: 0, left: 0, behavior: 'smooth' })
-    }
  
     return (
         <div className='grid grid-cols-1 lg:grid-cols-2'>
@@ -31,7 +27,6 @@ export default function CharactersList() {
                 disabled={page === 1 || isPreviousData}
                 onClick={() => {
                     setPage(n => n - 1)
-                    scrollToTop()
                 }}
             >previous</button>
             <button 
@@ -39,7 +34,6 @@ export default function CharactersList() {
                 disabled={data.info.next === null || isPreviousData} 
                 onClick={() => {
                     setPage(n => n + 1)
-                    scrollToTop()
                 }}
             >next</button>
         </div>
