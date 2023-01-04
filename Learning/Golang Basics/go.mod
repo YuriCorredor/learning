@@ -1,0 +1,3 @@
+module basic // IMPORT PATH FOR ALL PACKAGES IN OUT APP
+
+go 1.19
