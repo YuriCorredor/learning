@@ -21,3 +21,7 @@ npm run android
 `CTRL + M` to open the developer menu.
 
 `ALT + SPACE` to put the emulator always on top.
+
+```bash
+flipper # this will open flipper
+```
