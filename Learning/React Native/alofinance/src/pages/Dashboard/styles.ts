@@ -1,8 +1,9 @@
+import { ThemeType } from "styled-components"
 import styled from "styled-components/native"
 
 export const Container = styled.View`
   flex: 1;
-  background-color: #ccc;
+  background-color: ${({ theme }) => theme.colors.background};
   align-items: center;
   justify-content: center;
 `
@@ -10,6 +11,6 @@ export const Container = styled.View`
 export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: #333;
+  color: ${({ theme }) => theme.colors.title};
 `
 
