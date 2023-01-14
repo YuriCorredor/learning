@@ -1,10 +1,5 @@
-<h2>This is a repository to track my learnings throughout my career. Hope I can maintain this.</h2>
+# This repository tracks my personal learning progress throughout my career. 
 
-<p>This does not have the goal of teaching anyone anything, if You're looking for it, this is not the place. Here the code exposed may not be even close to those considered production-usable, and I hope it's not, after all that's not the goal.</p>
+It is not intended to teach others, but rather to document my own progress. The code shared here may not be suitable for production use, as the focus is on learning and experimentation rather than creating finished products. 
 
-<p>Learning to code is not the end goal.
-Programming is just a tool to solve problems.
-We don't program to just program, we program to solve a problem or to meet a desire. We program to create products. We program to create expiriences. We program to create.
-Learning GraphQL just for the sake of it doesn't mean anything. You learn it to make the process of development easier and smoother. You learn it to make working with team members easier. But the end goal is the same: create a product, service or expirience. Is to make something possible!</p>
-
-<h2>Hope you have a good life 😃</h2>
+Ultimately, the goal of learning to code is not just to know how to program, but to use programming as a tool to solve problems and create new products, services, and experiences. Learning GraphQL, for example, is not an end in itself, but rather a means to make development processes more efficient and collaborative. The ultimate goal is always to create something meaningful and useful.
