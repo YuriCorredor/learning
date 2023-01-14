@@ -1,6 +1,8 @@
 import styled from "styled-components/native"
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize"
 import { Feather } from "@expo/vector-icons"
+import { FlatList } from "react-native"
+import { DataListProps } from "."
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -78,4 +80,13 @@ export const Transactions = styled.View`
   flex: 1;
   padding: 0 ${RFPercentage(3)}px;
   margin-top: ${RFPercentage(12)}px;
+`
+
+export const TransactionsList = styled(FlatList<DataListProps>).attrs({
+  showsVerticalScrollIndicator: false,
+  contentContainerStyle: {
+    paddingBottom: RFPercentage(10)
+  }
+})`
+  margin-top: ${RFPercentage(2)}px;
 `
