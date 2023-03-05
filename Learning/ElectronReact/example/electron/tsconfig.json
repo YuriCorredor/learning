@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2017",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "outDir": "../build",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"]
+    }
+  },
+  "include": ["**/*"],
+}
