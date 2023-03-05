@@ -1,0 +1,15 @@
+{
+  "name": "electron-app",
+  "version": "1.0.0",
+  "description": "Electron studies",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "Yuri Corredor",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^23.1.2"
+  }
+}
