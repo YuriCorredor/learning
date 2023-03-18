@@ -42,4 +42,15 @@ func (s *OrderRepositoryTestSuit) TestSavingOrder() {
 	err = repository.Save(order)
 
 	s.Nil(err)
+
+	var orderResult entity.Order
+
+	err = s.DB.QueryRow("SELECT id, price, tax, final_price FROM orders WHERE id = ?", order.ID).Scan(&orderResult.ID, &orderResult.Price, &orderResult.Tax, &orderResult.FinalPrice)
+
+	s.Nil(err)
+
+	s.Equal(order.ID, orderResult.ID)
+	s.Equal(order.Price, orderResult.Price)
+	s.Equal(order.Tax, orderResult.Tax)
+	s.Equal(order.FinalPrice, orderResult.FinalPrice)
 }
