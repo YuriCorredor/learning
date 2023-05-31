@@ -59,29 +59,29 @@ def chat(llm):
 
 if __name__ == "__main__":
   # Create a new language model with a high temperature for more creative results
-  # llm = OpenAI(openai_api_key=OPENAI_API_KEY, temperature=0.9)
+  llm = OpenAI(openai_api_key=OPENAI_API_KEY, temperature=0.9)
 
   # Create a new language model using HuggingFace -> Running locally
-  # hf_llm = HuggingFacePipeline.from_model_id(
-  #   "gpt2",
-  #   task="text-generation",
-  #   pipeline_kwargs={ "max_new_tokens": 100 }
-  # )
+  hf_llm = HuggingFacePipeline.from_model_id(
+    "gpt2",
+    task="text-generation",
+    pipeline_kwargs={ "max_new_tokens": 100 }
+  )
 
   # Create a new language model using OpenAI GPT-3
   chat_llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
   
   # Predict a company name
-  # predict(llm)
+  predict(llm)
 
   # Predict a company name using a chain
-  # predict_with_chain(llm)
+  predict_with_chain(llm)
 
   # Create an agent and use it with some tools
-  # agent(llm)
+  agent(llm)
 
   # Create a conversation chain
-  # memory(hf_llm)
+  memory(hf_llm)
 
   # Chat with an AI
   chat(chat_llm)
