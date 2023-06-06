@@ -46,10 +46,10 @@ agent = initialize_agent(
   agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
   tools=tools,
   llm=llm,
+  memory=conversational_memory,
   verbose=True,
   max_iterations=3,
   early_stopping_method='generate',
-  memory=conversational_memory
 )
 
 # Existing prompt
