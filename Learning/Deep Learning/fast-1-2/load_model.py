@@ -9,7 +9,7 @@ im.thumbnail((192,192))
 categories = ("Dog", "Cat")
 
 def is_cat(x): return x[0].isupper() 
-learn = load_learner("model.pkl")
+learn = load_learner("_model.pkl")
 
 def predict_image(img):
   _, _, probs = learn.predict(img)

@@ -16,5 +16,5 @@ dls = ImageDataLoaders.from_name_func(
 learn = vision_learner(dls, resnet18, metrics=error_rate)
 learn.fine_tune(3)
 
-learn.export('model.pkl')
+learn.export('_model.pkl')
     
