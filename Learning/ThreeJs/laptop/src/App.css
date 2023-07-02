@@ -1,0 +1,16 @@
+html,
+body,
+#root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.laptop iframe {
+  width: 1024px;
+  height: 670px;
+  border: none;
+  border-radius: 20px;
+}
