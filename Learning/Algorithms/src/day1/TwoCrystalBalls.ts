@@ -28,7 +28,39 @@ export default function two_crystal_balls(breaks: boolean[]): number {
     }
   }
 
-  for (let i = floor - jumpAmount; i < floor; ++i) {
+  for (let i = floor - jumpAmount; i <= floor; ++i) {
+    if (breaks[i]) {
+      return i
+    }
+  }
+
+  return -1
+}
+
+/*
+  Using binary search (time complexity for this case specifically is O(n) instead of O(log n))
+  After the binary search part, the algorithm performs a linear search from the beginning of the
+  array up to the middle index found by the binary search. Meaning that the time complexity is
+  O(log n + n/2) = O(n/2) = O(n)
+*/
+export function two_crystal_balls_bs(breaks: boolean[]): number {
+  let left = 0
+  let right = breaks.length - 1
+  let middle = 0
+
+  while (right >= left) {
+    middle = Math.floor((right + left) / 2)
+
+    const guess = breaks[middle]
+
+    if (guess) {
+      break
+    } else {
+      left = middle + 1
+    }
+  }
+
+  for (let i = 0; i <= middle; i++) {
     if (breaks[i]) {
       return i
     }
